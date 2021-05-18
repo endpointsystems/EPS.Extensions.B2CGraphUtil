@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPS.Extensions.B2CGraphUtil", "src/EPS.Extensions.B2CGraphUtil.csproj", "{86023CCC-BDA9-4AE5-A5AE-27BFA159CD9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CC56E3DF-DBD1-4500-9A1B-E0F8B69090BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPS.Extensions.B2CGraphUtil.Test", "test/EPS.Extensions.B2CGraphUtil.Test.csproj", "{564ACFB0-BB98-4F4A-867F-FC33A2F384D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86023CCC-BDA9-4AE5-A5AE-27BFA159CD9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86023CCC-BDA9-4AE5-A5AE-27BFA159CD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86023CCC-BDA9-4AE5-A5AE-27BFA159CD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86023CCC-BDA9-4AE5-A5AE-27BFA159CD9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{564ACFB0-BB98-4F4A-867F-FC33A2F384D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{564ACFB0-BB98-4F4A-867F-FC33A2F384D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{564ACFB0-BB98-4F4A-867F-FC33A2F384D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{564ACFB0-BB98-4F4A-867F-FC33A2F384D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{564ACFB0-BB98-4F4A-867F-FC33A2F384D7} = {CC56E3DF-DBD1-4500-9A1B-E0F8B69090BE}
+	EndGlobalSection
+EndGlobal
