@@ -5,6 +5,7 @@
 
         <IsPackable>false</IsPackable>
       <UserSecretsId>bcb3e660-ce14-443d-bd64-66d02241664d</UserSecretsId>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
     <ItemGroup>
