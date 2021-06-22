@@ -86,6 +86,19 @@ namespace EPS.Extensions.B2CGraphUtil
         }
 
         /// <summary>
+        /// Get the <see cref="User"/> by their UserPrincipalName.
+        /// </summary>
+        /// <param name="upn">the userPrincipalName.</param>
+        /// <returns>The <see cref="User"/> or null if they do not exist.</returns>
+        public async Task<User> GetUserByUPN(string upn)
+        {
+            var u = await client.Users.Request()
+                .Filter($"userPrincipalName eq '{upn}'").GetAsync();
+
+            return u.Count > 0 ? u.First() : null;
+        }
+
+        /// <summary>
         /// Get a <see cref="User"/> from the directory.
         /// </summary>
         /// <param name="userId">The user's identifier.</param>
