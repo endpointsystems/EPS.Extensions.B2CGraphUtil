@@ -7,16 +7,17 @@
         <Copyright>2007-2021 Endpoint Systems. All rights reserved.</Copyright>
         <PackageProjectUrl>https://endpointsystems.com/blog/eps-extensions-nuget-packages</PackageProjectUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>5.0.0</PackageVersion>
+        <PackageVersion>5.0.1-preview4</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
-        <PackageReleaseNotes>Currently supports Graph 1.0 (June 2021).</PackageReleaseNotes>
+        <PackageReleaseNotes>Add an Exists function in user repo</PackageReleaseNotes>
       <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
   </PropertyGroup>
     <ItemGroup>
@@ -37,7 +38,7 @@
       <PackageReference Include="Microsoft.Graph" Version="4.0.0-preview.4" />
       <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.7" />
       <PackageReference Include="Microsoft.Graph.Core" Version="2.0.0-preview.11" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.*" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -46,11 +47,6 @@
 
     <ItemGroup>
       <EmbeddedResource Remove="EPS.Extensions.B2CGraphUtil.Test\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Helper" />
-      <Folder Include="Repos" />
     </ItemGroup>
 
 </Project>

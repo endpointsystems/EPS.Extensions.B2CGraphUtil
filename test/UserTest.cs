@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using ET.FakeText;
+
 // ReSharper disable MethodHasAsyncOverload
 
 namespace EPS.Extensions.B2CGraphUtil.Test
@@ -19,6 +18,14 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         }
 
         [Test]
+        [Order(2)]
+        public async Task UserExistsTest()
+        {
+            Assert.IsTrue(await repo.Exists($"fred.flintstone@{Tenant}"));
+        }
+
+        [Test]
+        [Order(1)]
         public async Task CreateUserTest()
         {
             var user = await repo.AddUser("fred", "flintstone", "fred flintstone","my pretty good password!01");
@@ -30,6 +37,7 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         }
 
         [Test]
+        [Order(3)]
         public async Task CheckUserMembershipTest()
         {
             var dir = await repo.MemberOf("bd618a82-0d63-423b-9a91-442d37fd6fc2");
@@ -37,12 +45,11 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         }
 
         [Test]
+        [Order(4)]
         public async Task create_a_large_amt_of_users_and_list_them()
         {
-            var tg = new TextGenerator(WordTypes.Name);
-            var rdm = new Random(15);
             var tasks = new List<Task>();
-            for (int i = 0; i < 2000; i++)
+            for (var i = 0; i < 2000; i++)
             {
                 var first = Unique.Unique.Generate(15, 0);
                 var last = Unique.Unique.Generate(15,0);

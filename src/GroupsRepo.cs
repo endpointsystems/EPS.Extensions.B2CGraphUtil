@@ -6,8 +6,15 @@ using Microsoft.Graph;
 
 namespace EPS.Extensions.B2CGraphUtil
 {
+    /// <summary>
+    /// Repository for manipulating <see cref="Group"/> objects in the directory.
+    /// </summary>
     public class GroupsRepo: BaseRepo
     {
+        /// <summary>
+        /// Create a new instance of the repo.
+        /// </summary>
+        /// <param name="config">The <see cref="GraphUtilConfig"/> instance.</param>
         public GroupsRepo(GraphUtilConfig config) : base(config)
         {
         }
@@ -34,6 +41,10 @@ namespace EPS.Extensions.B2CGraphUtil
 
         }
 
+        /// <summary>
+        /// Delete a group from the directory.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
         public async Task DeleteGroup(string groupId)
         {
             await client.Groups[groupId].Request().DeleteAsync();

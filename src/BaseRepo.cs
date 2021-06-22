@@ -5,12 +5,27 @@ using Microsoft.Identity.Client;
 
 namespace EPS.Extensions.B2CGraphUtil
 {
+    /// <summary>
+    /// The base repository used for the graph objects.
+    /// </summary>
     public class BaseRepo
     {
+        /// <summary>
+        /// The graph service client.
+        /// </summary>
         protected readonly GraphServiceClient client;
+        /// <summary>
+        /// The client credential provider.
+        /// </summary>
         protected readonly ClientCredentialProvider provider;
+        /// <summary>
+        /// The domains provided by the graph API.
+        /// </summary>
         protected readonly IGraphServiceDomainsCollectionPage domains;
-
+        /// <summary>
+        /// Instantiate a new instance of the base repo.
+        /// </summary>
+        /// <param name="config">The configuration object.</param>
         protected BaseRepo(GraphUtilConfig config)
         {
             var app = ConfidentialClientApplicationBuilder

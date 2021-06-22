@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using Microsoft.Graph;
 using User = Microsoft.Graph.User;
+// ReSharper disable PartialTypeWithSinglePart
 
 namespace EPS.Extensions.B2CGraphUtil
 {
@@ -13,6 +14,10 @@ namespace EPS.Extensions.B2CGraphUtil
     public partial class UserRepo: BaseRepo
     {
 
+        /// <summary>
+        /// Create a new instance of the <see cref="User"/> graph repository.
+        /// </summary>
+        /// <param name="config">The configuration object instance.</param>
         public UserRepo(GraphUtilConfig config): base(config)
         {
         }
@@ -31,6 +36,17 @@ namespace EPS.Extensions.B2CGraphUtil
             return ret;
         }
 
+        /// <summary>
+        /// Checks for the existence of a <see cref="User"/> based on their User Principal Name.
+        /// </summary>
+        /// <param name="upn">their User Principal Name</param>
+        /// <returns><c>true</c> if they exist in the directory.</returns>
+        public async Task<bool> Exists(string upn)
+        {
+            var u = await client.Users.Request()
+                .Filter($"userPrincipalName eq '{upn}'").GetAsync();
+            return u.Count > 0;
+        }
 
         /// <summary>
         /// Create a new user with the parameters provided.
@@ -60,28 +76,53 @@ namespace EPS.Extensions.B2CGraphUtil
             return ret;
         }
 
+        /// <summary>
+        /// Delete a <see cref="User"/> from the directory.
+        /// </summary>
+        /// <param name="id">The user's identifier.</param>
         public async Task DeleteUser(string id)
         {
             await client.Users[id].Request().DeleteAsync();
         }
 
+        /// <summary>
+        /// Get a <see cref="User"/> from the directory.
+        /// </summary>
+        /// <param name="userId">The user's identifier.</param>
+        /// <returns></returns>
         public async Task<User> GetUser(string userId)
         {
             return await client.Users[userId].Request().GetAsync();
         }
 
+        /// <summary>
+        /// Used to confirm the <see cref="User"/> is a member of said <see cref="Group"/>.
+        /// </summary>
+        /// <param name="userId">The <see cref="User"/> identifier.</param>
+        /// <param name="groupId">The <see cref="Group"/> identifier.</param>
+        /// <returns><c>true</c> if the <see cref="User"/> is a member of the <see cref="Group"/>.</returns>
         public async Task<bool> MemberOf(string userId, string groupId)
         {
             var resp = await client.Users[userId].MemberOf[groupId].Request().GetAsync();
             return resp != null;
         }
 
+        /// <summary>
+        /// Add a <see cref="User"/> to the specified <see cref="Group"/>.
+        /// </summary>
+        /// <param name="userId">The <see cref="User"/> identifier</param>
+        /// <param name="groupId">The <see cref="Group"/> identifier</param>
         public async Task AddToGroup(string userId, string groupId)
         {
             var d = new DirectoryObject() {Id = userId};
             await client.Groups[groupId].Members.References.Request().AddAsync(d);
         }
 
+        /// <summary>
+        /// Discovery of what <see cref="Group"/> objects a <see cref="User"/> is a member of.
+        /// </summary>
+        /// <param name="userId">The <see cref="User"/> identifier.</param>
+        /// <returns>A list of <see cref="DirectoryObject"/> values containing the <see cref="User"/></returns>
         public async Task<List<DirectoryObject>> MemberOf(string userId)
         {
             int i = 0;
