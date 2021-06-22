@@ -17,7 +17,7 @@
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
-        <PackageReleaseNotes>Add an Exists function in user repo</PackageReleaseNotes>
+        <PackageReleaseNotes>Add GetUserByUpn function in user repo</PackageReleaseNotes>
       <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
   </PropertyGroup>
     <ItemGroup>
