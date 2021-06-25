@@ -12,12 +12,12 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>5.0.3-preview4</PackageVersion>
+        <PackageVersion>5.0.4-preview4</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
-        <PackageReleaseNotes>Add GetUserByUpn function in user repo</PackageReleaseNotes>
+        <PackageReleaseNotes>restored missing GetGroup method</PackageReleaseNotes>
       <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
   </PropertyGroup>
     <ItemGroup>

@@ -42,6 +42,16 @@ namespace EPS.Extensions.B2CGraphUtil
         }
 
         /// <summary>
+        /// Get a <see cref="Group"/> from the directory.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <returns>A <see cref="Task"/> containing the <see cref="Group"/>.</returns>
+        public Task<Group> GetGroup(string groupId)
+        {
+            return client.Groups[groupId].Request().GetAsync();
+        }
+
+        /// <summary>
         /// Delete a group from the directory.
         /// </summary>
         /// <param name="groupId">The group identifier.</param>
