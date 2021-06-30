@@ -102,7 +102,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// Get a <see cref="User"/> from the directory.
         /// </summary>
         /// <param name="userId">The user's identifier.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="User"/>.</returns>
         public async Task<User> GetUser(string userId)
         {
             return await client.Users[userId].Request().GetAsync();
