@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using Microsoft.Graph;
@@ -116,7 +117,16 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns><c>true</c> if the <see cref="User"/> is a member of the <see cref="Group"/>.</returns>
         public async Task<bool> MemberOf(string userId, string groupId)
         {
-            var resp = await client.Users[userId].MemberOf[groupId].Request().GetAsync();
+            DirectoryObject resp;
+            try
+            {
+                resp = await client.Users[userId].MemberOf[groupId].Request().GetAsync();
+            }
+            catch (ServiceException se)
+            {
+                if (se.StatusCode == HttpStatusCode.NotFound) return false;
+                throw;
+            }
             return resp != null;
         }
 

@@ -69,6 +69,14 @@ namespace EPS.Extensions.B2CGraphUtil.Test
             }
         }
 
+        [Test]
+        public async Task MemberOfTest()
+        {
+            var usr = await repo.GetUser("c7fb02df-1d31-45b6-9953-73aadaed760f");
+            var mbr = await repo.MemberOf("c7fb02df-1d31-45b6-9953-73aadaed760f", "f125a5d1-7a31-409b-b89f-7d46e70f5150");
+            Assert.AreNotEqual(mbr, true);
+        }
+
         [OneTimeTearDown]
         public async Task Teardown()
         {
