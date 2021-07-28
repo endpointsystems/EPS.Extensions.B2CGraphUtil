@@ -12,12 +12,12 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>5.0.5-preview4</PackageVersion>
+        <PackageVersion>5.0.6</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
-        <PackageReleaseNotes>Added exception handling to MemberOf to return false if ServiceException of type 'Request_ResourceNotFound' occurs.  </PackageReleaseNotes>
+        <PackageReleaseNotes>update dependencies to release version of graph client.</PackageReleaseNotes>
       <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
   </PropertyGroup>
     <ItemGroup>
@@ -35,9 +35,9 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-      <PackageReference Include="Microsoft.Graph" Version="4.0.0-preview.4" />
+      <PackageReference Include="Microsoft.Graph" Version="4.0.0" />
       <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.7" />
-      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.0-preview.11" />
+      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
