@@ -12,7 +12,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>5.0.6</PackageVersion>
+        <PackageVersion>5.0.7</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
@@ -35,9 +35,9 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-      <PackageReference Include="Microsoft.Graph" Version="4.0.0" />
+      <PackageReference Include="Microsoft.Graph" Version="4.2.0" />
       <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.7" />
-      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.0" />
+      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
