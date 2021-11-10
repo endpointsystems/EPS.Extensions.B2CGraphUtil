@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
+using EPS.Extensions.B2CGraphUtil.Exceptions;
 using Microsoft.Graph;
 using User = Microsoft.Graph.User;
 // ReSharper disable PartialTypeWithSinglePart
@@ -33,8 +34,17 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </remarks>
         public async Task<User> AddUser(User user)
         {
-            var ret = await client.Users.Request().AddAsync(user);
-            return ret;
+            try
+            {
+                var ret = await client.Users.Request().AddAsync(user);
+                return ret;
+            }
+            catch (ServiceException se)
+            {
+                throw new UserException(
+                    $"A {se.StatusCode} occured adding user {user.UserPrincipalName} to the directory: {se.Error.Message} Check the inner exception for details.",
+                    user, se);
+            }
         }
 
         /// <summary>
@@ -44,9 +54,18 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns><c>true</c> if they exist in the directory.</returns>
         public async Task<bool> Exists(string upn)
         {
-            var u = await client.Users.Request()
-                .Filter($"userPrincipalName eq '{upn}'").GetAsync();
-            return u.Count > 0;
+            try
+            {
+                var u = await client.Users.Request()
+                    .Filter($"userPrincipalName eq '{upn}'").GetAsync();
+                return u.Count > 0;
+            }
+            catch (ServiceException se)
+            {
+                throw new UserException(
+                    $"A {se.StatusCode} occured checking the existence of user user {upn} to the directory: {se.Error.Message} Check the inner exception for details.",
+                    se);
+            }
         }
 
         /// <summary>
@@ -67,14 +86,27 @@ namespace EPS.Extensions.B2CGraphUtil
             var user = new User
             {
                 GivenName = firstName, Surname = lastName, DisplayName = displayName,
-                PasswordProfile = new PasswordProfile {Password = pwd},
+                PasswordProfile = new PasswordProfile
+                {
+                    Password = pwd,
+                    ForceChangePasswordNextSignIn = false
+                },
+                PasswordPolicies = "DisablePasswordExpiration",
                 AccountEnabled = false,
                 MailNickname = firstName + "." + lastName,
                 UserPrincipalName = firstName + "." + lastName + "@" + domains[0].Id
             };
-
-            var ret = await client.Users.Request().AddAsync(user);
-            return ret;
+            try
+            {
+                var ret = await client.Users.Request().AddAsync(user);
+                return ret;
+            }
+            catch (ServiceException se)
+            {
+                throw new UserException(
+                    $"A {se.StatusCode} occured building and adding user {user.UserPrincipalName} to the directory: {se.Error.Message} Check the inner exception for details.",
+                    user, se);
+            }
         }
 
         /// <summary>
