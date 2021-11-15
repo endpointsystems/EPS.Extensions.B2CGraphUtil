@@ -37,6 +37,13 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         }
 
         [Test]
+        public async Task CheckUserGroupNames()
+        {
+            var names = await repo.GetMemberGroupListAsync("bd618a82-0d63-423b-9a91-442d37fd6fc2");
+            Assert.True(names.Count > 1);
+        }
+
+        [Test]
         [Order(3)]
         public async Task CheckUserMembershipTest()
         {

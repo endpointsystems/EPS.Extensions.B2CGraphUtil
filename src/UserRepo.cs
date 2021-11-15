@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using EPS.Extensions.B2CGraphUtil.Exceptions;
@@ -191,6 +193,49 @@ namespace EPS.Extensions.B2CGraphUtil
             });
             await pi.IterateAsync();
             return list;
+        }
+
+        /// <summary>
+        /// Get the list of group names that the user is a group of.
+        /// </summary>
+        /// <param name="userId">The user to test against.</param>
+        /// <returns>A list of groups.</returns>
+        /// <remarks>
+        /// This code will catch an exception if the group isn't part of the Azure Active Directory
+        /// Groups collection (i.e. Global administrator or anything listed in Azure AD B2C | Roles and administrators)
+        /// </remarks>
+        public async Task<List<Group>> GetMemberGroupListAsync(string userId)
+        {
+            try
+            {
+                var i = 0;
+                var names = new List<Group>();
+                var groups = await client.Users[userId].MemberOf.Request().GetAsync();
+                var iterator =
+                    PageIterator<DirectoryObject>.CreatePageIterator(client, groups,
+                        dirObj =>
+                        {
+                            i++;
+                            try
+                            {
+                                var g = client.Groups[dirObj.Id].Request().GetAsync().Result;
+                                names.Add(g);
+                            }
+                            catch (AggregateException e)
+                            {
+                                //catch an exception when an AD group shows up that isn't part of the B2C Groups
+                                //(i.e. 'System Administrators')
+                            }
+                            return i < groups.Count;
+                        });
+                await iterator.IterateAsync();
+                return names;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
