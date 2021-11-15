@@ -20,7 +20,8 @@
         <PackageReleaseNotes>
             Added a method to UserRepo called GetMemberGroupListAsync to get the list of groups a user is associated with.
         </PackageReleaseNotes>
-      <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
+        <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
     <ItemGroup>
         <None Update="icon.png">
@@ -28,11 +29,8 @@
             <Visible>false</Visible>
             <PackagePath>/</PackagePath>
         </None>
-        <None Update="..\README.md">
-            <Pack>true</Pack>
-            <PackagePath>/</PackagePath>
-        </None>
         <None Remove="EPS.Extensions.B2CGraphUtil.Test\**" />
+        <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -55,5 +53,5 @@
       <Folder Include="Helper" />
       <Folder Include="Repos" />
     </ItemGroup>
-
+    
 </Project>
