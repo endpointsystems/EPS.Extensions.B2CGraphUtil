@@ -1,6 +1,6 @@
 using EPS.Extensions.B2CGraphUtil.Config;
 using Microsoft.Graph;
-using Microsoft.Graph.Auth;
+using Azure.Identity;
 using Microsoft.Identity.Client;
 
 namespace EPS.Extensions.B2CGraphUtil
@@ -14,10 +14,11 @@ namespace EPS.Extensions.B2CGraphUtil
         /// The graph service client.
         /// </summary>
         protected readonly GraphServiceClient client;
+
         /// <summary>
         /// The client credential provider.
         /// </summary>
-        protected readonly ClientCredentialProvider provider;
+        private readonly ClientSecretCredential credential;
         /// <summary>
         /// The domains provided by the graph API.
         /// </summary>
@@ -33,8 +34,11 @@ namespace EPS.Extensions.B2CGraphUtil
                 .WithTenantId(config.TenantId)
                 .WithClientSecret(config.Secret)
                 .Build();
-            provider = new ClientCredentialProvider(app);
-            client = new GraphServiceClient(provider);
+
+            credential = new ClientSecretCredential(config.TenantId,
+                config.AppId,
+                config.Secret);
+            client = new GraphServiceClient(credential);
             domains = client.Domains.Request().GetAsync().Result;
 
         }

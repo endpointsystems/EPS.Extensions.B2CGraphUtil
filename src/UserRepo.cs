@@ -221,7 +221,7 @@ namespace EPS.Extensions.B2CGraphUtil
                                 var g = client.Groups[dirObj.Id].Request().GetAsync().Result;
                                 names.Add(g);
                             }
-                            catch (AggregateException e)
+                            catch (AggregateException)
                             {
                                 //catch an exception when an AD group shows up that isn't part of the B2C Groups
                                 //(i.e. 'System Administrators')

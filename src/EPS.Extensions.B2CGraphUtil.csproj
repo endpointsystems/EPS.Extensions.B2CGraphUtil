@@ -12,13 +12,13 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>5.0.9</PackageVersion>
+        <PackageVersion>5.0.10</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
         <PackageReleaseNotes>
-            Added a method to UserRepo called GetMemberGroupListAsync to get the list of groups a user is associated with.
+            Replaced obsolete package Microsoft.Graph.Auth with Azure.Identity and updated the client authentication process.
         </PackageReleaseNotes>
         <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -30,13 +30,13 @@
             <PackagePath>/</PackagePath>
         </None>
         <None Remove="EPS.Extensions.B2CGraphUtil.Test\**" />
-        <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Azure.Identity" Version="1.5.0" />
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
       <PackageReference Include="Microsoft.Graph" Version="4.10.0" />
-      <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.7" />
       <PackageReference Include="Microsoft.Graph.Core" Version="2.0.5" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
