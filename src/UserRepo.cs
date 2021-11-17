@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using EPS.Extensions.B2CGraphUtil.Exceptions;
@@ -247,7 +246,7 @@ namespace EPS.Extensions.B2CGraphUtil
             int i = 0;
 
             var result = await client.Users.Request().GetAsync();
-            var list = result.CurrentPage.ToList();
+            var list = new List<User>();
             var pi = PageIterator<User>.CreatePageIterator(client, result, user =>
             {
                 i++;

@@ -27,7 +27,7 @@ namespace EPS.Extensions.B2CGraphUtil
         {
             int i = 0;
             var resp = await client.Groups.Request().GetAsync();
-            var list = resp.CurrentPage.ToList();
+            var list = new List<Group>();
 
             var pi = PageIterator<Group>.CreatePageIterator(client, resp, g =>
             {
