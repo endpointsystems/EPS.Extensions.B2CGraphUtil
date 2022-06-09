@@ -27,16 +27,20 @@ namespace EPS.Extensions.B2CGraphUtil.Test
                 .AddUserSecrets<TestBase>();
             Configuration = builder.Build();
 
-            AppId = Configuration["GraphUtilConfig:AppId"];
-            TenantId = Configuration["GraphUtilConfig:TenantId"];
-            Secret = Configuration["GraphUtilConfig:Secret"];
-            Tenant = Configuration["GraphUtilConfig:Tenant"];
-            Config = new GraphUtilConfig
-            {
-                AppId = AppId,
-                Secret = Secret,
-                TenantId = TenantId
-            };
+            Config = GraphUtilConfig.Construct(Configuration);
+            TestContext.WriteLine(Config.AppId);
+            // Config = new GraphUtilConfig(Configuration.GetSection("GraphUtilConfig"));
+            //
+            // AppId = Configuration["GraphUtilConfig:AppId"];
+            // TenantId = Configuration["GraphUtilConfig:TenantId"];
+            // Secret = Configuration["GraphUtilConfig:Secret"];
+            // Tenant = Configuration["GraphUtilConfig:Tenant"];
+            // Config = new GraphUtilConfig
+            // {
+            //     AppId = AppId,
+            //     Secret = Secret,
+            //     TenantId = TenantId
+            // };
 
         }
 
