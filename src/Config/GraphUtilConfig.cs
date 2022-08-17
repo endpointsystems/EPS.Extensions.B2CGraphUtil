@@ -28,7 +28,7 @@ namespace EPS.Extensions.B2CGraphUtil.Config
     /// </item>
     /// </list>
     /// </remarks>
-    public class GraphUtilConfig
+    public class GraphUtilConfig: ConfigOptionsBase<GraphUtilConfig>
     {
         /// <summary>
         /// Application (client) ID
@@ -44,5 +44,9 @@ namespace EPS.Extensions.B2CGraphUtil.Config
         /// </summary>
         public string Secret { get; set; }
 
+        /// <summary>
+        /// The section name to pull the configuration object from. Defaults to GraphUtilConfig
+        /// </summary>
+        protected override string SectionName => "GraphUtilConfig";
     }
 }

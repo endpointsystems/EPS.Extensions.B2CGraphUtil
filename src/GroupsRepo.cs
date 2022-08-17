@@ -77,6 +77,26 @@ namespace EPS.Extensions.B2CGraphUtil
             var resp = await client.Groups.Request().AddAsync(group);
             return resp;
         }
+        
+        /// <summary>
+        /// Create a group within the directory with MailEnabled at false and SecurityEnabled at true.
+        /// </summary>
+        /// <param name="groupName">The group name.</param>
+        /// <param name="desc">A description for the group.</param>
+        /// <returns>The group object.</returns>
+        public async Task<Group> CreateGroup(string groupName, string desc)
+        {
+            var group = new Group()
+            {
+                Description = desc,
+                DisplayName = groupName,
+                MailEnabled = false,
+                MailNickname = groupName,
+                SecurityEnabled = true
+            };
+            var resp = await client.Groups.Request().AddAsync(group);
+            return resp;
+        }
 
     }
 }
