@@ -16,7 +16,7 @@ See [Register a Microsoft Graph Application](https://docs.microsoft.com/en-us/az
 
 ## Configuration
 
-Both `UserRepo` and `GroupRepo` depend on an instance of `GraphUtilConfig` for instantiation. This class has three properties:
+Both `UserRepo` and `GroupRepo` depend on an instance of `GraphUtilConfig` configuration object for instantiation. This class has three properties:
 - `AppId` - the application ID
 - `TenantId` - the tenant ID (the GUID)
 - `AppSecret` - the application secret

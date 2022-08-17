@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Title>B2CGraphUtil</Title>
-        <Description>This library gives you admin access to manipulate Azure AD B2C Graph objects. </Description>
+        <Description>This library lets you quickly query and manipulate Azure AD B2C Graph User and Group objects. </Description>
         <Copyright>2007-2022 Endpoint Systems. All rights reserved.</Copyright>
         <PackageProjectUrl>https://endpointsystems.com/blog/eps-extensions-nuget-packages</PackageProjectUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
