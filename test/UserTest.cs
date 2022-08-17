@@ -21,7 +21,7 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         [Order(2)]
         public async Task UserExistsTest()
         {
-            Assert.IsTrue(await repo.Exists($"fred.flintstone@{Tenant}"));
+            Assert.IsTrue(await repo.Exists($"fred.flintstone@{TenantId}"));
         }
 
         [Test]
@@ -84,6 +84,13 @@ namespace EPS.Extensions.B2CGraphUtil.Test
             Assert.AreNotEqual(mbr, true);
         }
 
+        [Test]
+        public async Task FindByemail()
+        {
+            var user = await repo.FindUserByOtherMails("<external-registered-user>@gmail.com");
+            Assert.IsNotNull(user);
+        }
+
         [OneTimeTearDown]
         public async Task Teardown()
         {
@@ -97,6 +104,8 @@ namespace EPS.Extensions.B2CGraphUtil.Test
 
             Task.WaitAll(tasks.ToArray());
         }
+        
+        
 
     }
 }

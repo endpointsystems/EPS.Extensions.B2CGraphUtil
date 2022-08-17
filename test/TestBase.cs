@@ -14,7 +14,6 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         protected string AppId { get; set; }
         protected string TenantId { get; set; }
         protected string Secret { get; set; }
-        protected string Tenant { get; set; }
 
         protected Config.GraphUtilConfig Config { get; set; }
 
@@ -30,7 +29,6 @@ namespace EPS.Extensions.B2CGraphUtil.Test
             AppId = Configuration["GraphUtilConfig:AppId"];
             TenantId = Configuration["GraphUtilConfig:TenantId"];
             Secret = Configuration["GraphUtilConfig:Secret"];
-            Tenant = Configuration["GraphUtilConfig:Tenant"];
             Config = new GraphUtilConfig
             {
                 AppId = AppId,
