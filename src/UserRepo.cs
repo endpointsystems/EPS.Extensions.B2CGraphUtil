@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using EPS.Extensions.B2CGraphUtil.Exceptions;
 using Microsoft.Graph;
+using Microsoft.IdentityModel.Tokens;
 using User = Microsoft.Graph.User;
 // ReSharper disable PartialTypeWithSinglePart
 
@@ -67,6 +68,34 @@ namespace EPS.Extensions.B2CGraphUtil
                     $"A {se.StatusCode} occured checking the existence of user user {upn} to the directory: {se.Error.Message} Check the inner exception for details.",
                     se);
             }
+        }
+
+        /// <summary>
+        /// Find user by Other Mails (otherMails).
+        /// </summary>
+        /// <param name="email">The other email</param>
+        /// <returns>The user</returns>
+        /// <remarks>
+        /// In the Azure AD B2C directory, if someone registers using an external identity provider, you can
+        /// get their email address from the otherMails property of the User object.
+        /// </remarks>
+        public async Task<User?> FindUserByOtherMails(string email)
+        {
+            //queries that didn't work
+            // $"identities/any(id:id eq '{email}')"
+            var users = (await client.Users.Request().Filter($"otherMails/any(id:id eq '{email}')").GetAsync()).ToList();
+            return users.Count == 0 ? null : users.First();
+        }
+
+        /// <summary>
+        /// Get the user (object) id of a user in the directory by their email address.
+        /// </summary>
+        /// <param name="email">The user email.</param>
+        /// <returns></returns>
+        public async Task<string?> FindUserIdByOtherMails(string email)
+        {
+            var user = await FindUserByOtherMails(email);
+            return user?.Id;
         }
 
         /// <summary>
