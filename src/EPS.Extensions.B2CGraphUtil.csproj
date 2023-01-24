@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <Title>B2CGraphUtil</Title>
         <Description>This library gives you admin access to manipulate Azure AD B2C Graph objects. </Description>
-        <Copyright>2007-2022 Endpoint Systems. All rights reserved.</Copyright>
+        <Copyright>2007-2023 Endpoint Systems. All rights reserved.</Copyright>
         <PackageProjectUrl>https://endpointsystems.com/blog/eps-extensions-nuget-packages</PackageProjectUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -12,13 +12,13 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>6.0.2</PackageVersion>
+        <PackageVersion>6.0.4</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
         <PackageReleaseNotes>
-            update group repo to add a description on creation.
+            Dependency updates, fixed UserRepo.GetAllUsers() to actually return *all* users and not just the first 100.
         </PackageReleaseNotes>
         <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -35,14 +35,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Identity" Version="1.6.0" />
+      <PackageReference Include="Azure.Identity" Version="1.8.1" />
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
       <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Graph" Version="4.30.0" />
-      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.8" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.2" />
+      <PackageReference Include="Microsoft.Graph" Version="4.51.0" />
+      <PackageReference Include="Microsoft.Graph.Core" Version="2.0.14" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
 
     <ItemGroup>

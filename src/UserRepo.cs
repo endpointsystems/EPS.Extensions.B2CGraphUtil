@@ -244,18 +244,22 @@ namespace EPS.Extensions.B2CGraphUtil
         public async Task<List<User>> GetAllUsers()
         {
             int i = 0;
-
+            int pgSize = 100;
             var result = await client.Users.Request().GetAsync();
             var list = new List<User>();
             var pi = PageIterator<User>.CreatePageIterator(client, result, user =>
             {
                 i++;
                 list.Add(user);
-                return i < result.Count;
+                return i < pgSize;
             });
 
             await pi.IterateAsync();
-
+            while (pi.State != PagingState.Complete)
+            {
+                i = 0;
+                await pi.ResumeAsync();
+            }
             return list;
         }
     }
