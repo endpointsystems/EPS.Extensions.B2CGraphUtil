@@ -12,15 +12,13 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>6.0.5</PackageVersion>
+        <PackageVersion>6.0.6</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
         <PackageReleaseNotes>
-            Dependency updates, Add UpdateUser method to UserRepo. Added ILogger to constructors as an option. 
-            Added a RetryCount to GraphUtilConfig and Polly to some of the directory methods to retry an operation to 
-            the retry count specified. Default value is 5.
+            fixed bug in AddUser
         </PackageReleaseNotes>
         <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
