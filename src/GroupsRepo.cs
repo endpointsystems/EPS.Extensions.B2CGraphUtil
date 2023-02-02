@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 
 namespace EPS.Extensions.B2CGraphUtil
@@ -18,6 +18,13 @@ namespace EPS.Extensions.B2CGraphUtil
         public GroupsRepo(GraphUtilConfig config) : base(config)
         {
         }
+        
+        /// <summary>
+        /// Create a new repo instance with logging.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        public GroupsRepo(GraphUtilConfig config, ILogger<GroupsRepo> logger): base(config,logger){}
 
         /// <summary>
         /// Get all of the groups in the directory.

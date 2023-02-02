@@ -12,13 +12,15 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>6.0.4</PackageVersion>
+        <PackageVersion>6.0.5</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>AzureADB2C, Graph, HttpClient, API</PackageTags>
         <PackageReleaseNotes>
-            Dependency updates, fixed UserRepo.GetAllUsers() to actually return *all* users and not just the first 100.
+            Dependency updates, Add UpdateUser method to UserRepo. Added ILogger to constructors as an option. 
+            Added a RetryCount to GraphUtilConfig and Polly to some of the directory methods to retry an operation to 
+            the retry count specified. Default value is 5.
         </PackageReleaseNotes>
         <UserSecretsId>cee613d7-9917-4759-ab5a-d6549eecd4dd</UserSecretsId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -31,7 +33,7 @@
             <PackagePath>/</PackagePath>
         </None>
         <None Remove="EPS.Extensions.B2CGraphUtil.Test\**" />
-        <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,9 +42,11 @@
       <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.2" />
-      <PackageReference Include="Microsoft.Graph" Version="4.51.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Graph" Version="4.52.0" />
       <PackageReference Include="Microsoft.Graph.Core" Version="2.0.14" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="Polly" Version="7.2.3" />
     </ItemGroup>
 
     <ItemGroup>

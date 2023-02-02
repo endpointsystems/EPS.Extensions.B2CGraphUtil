@@ -31,6 +31,11 @@ namespace EPS.Extensions.B2CGraphUtil.Config
     public class GraphUtilConfig: ConfigOptionsBase<GraphUtilConfig>
     {
         /// <summary>
+        /// The number of times to retry a graph operation.
+        /// </summary>
+        public int RetryCount { get; set; } = 5;
+        
+        /// <summary>
         /// Application (client) ID
         /// </summary>
         public string AppId { get; set; }

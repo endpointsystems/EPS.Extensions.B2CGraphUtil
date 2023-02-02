@@ -1,7 +1,10 @@
-using EPS.Extensions.B2CGraphUtil.Config;
+using System;
 using Microsoft.Graph;
 using Azure.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using GraphUtilConfig = EPS.Extensions.B2CGraphUtil.Config.GraphUtilConfig;
+// ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace EPS.Extensions.B2CGraphUtil
 {
@@ -11,23 +14,49 @@ namespace EPS.Extensions.B2CGraphUtil
     public class BaseRepo
     {
         /// <summary>
+        /// The graph configuration.
+        /// </summary>
+        protected readonly GraphUtilConfig config;
+        /// <summary>
+        /// The logger (optional)
+        /// </summary>
+        protected readonly ILogger log;
+        /// <summary>
         /// The graph service client.
         /// </summary>
-        protected readonly GraphServiceClient client;
+        protected GraphServiceClient client;
 
         /// <summary>
         /// The client credential provider.
         /// </summary>
-        private readonly ClientSecretCredential credential;
+        private ClientSecretCredential credential;
         /// <summary>
         /// The domains provided by the graph API.
         /// </summary>
-        protected readonly IGraphServiceDomainsCollectionPage domains;
+        protected IGraphServiceDomainsCollectionPage domains;
         /// <summary>
         /// Instantiate a new instance of the base repo.
         /// </summary>
-        /// <param name="config">The configuration object.</param>
-        protected BaseRepo(GraphUtilConfig config)
+        /// <param name="graphUtilConfig">The configuration object.</param>
+        protected BaseRepo(GraphUtilConfig graphUtilConfig)
+        {
+            config = graphUtilConfig;
+            initGraph();
+        }
+
+        /// <summary>
+        /// initialize with a logger.
+        /// </summary>
+        /// <param name="graphUtilConfig"></param>
+        /// <param name="logger"></param>
+        protected BaseRepo(GraphUtilConfig graphUtilConfig, ILogger logger)
+        {
+            config = graphUtilConfig;
+            log = logger;
+            initGraph();
+        }
+
+        private void initGraph()
         {
             var app = ConfidentialClientApplicationBuilder
                 .Create(config.AppId)
@@ -40,7 +69,72 @@ namespace EPS.Extensions.B2CGraphUtil
                 config.Secret);
             client = new GraphServiceClient(credential);
             domains = client.Domains.Request().GetAsync().Result;
-
         }
+        
+        /// <summary>
+        /// log information message
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void info(string msg, Exception? exception = null)
+        {
+            if (log == null) return;
+            log.LogInformation(exception: exception, message:msg);
+        }
+
+        /// <summary>
+        /// Log warning.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void warn(string msg, Exception? exception = null)
+        {
+            if (log == null) return;
+            log.LogWarning(exception: exception, message: msg);
+        }
+        /// <summary>
+        /// Log trace message.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void trace(string msg, Exception? exception = null)
+        {
+            if (log == null) return;
+            log.LogTrace(exception: exception, message: msg);
+        }
+    
+        /// <summary>
+        /// Log trace message.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void debug(string msg, Exception? exception)
+        {
+            if (log == null) return;
+            log.LogDebug(exception: exception, message: msg);
+        }
+    
+        /// <summary>
+        /// Log error message.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void err(string msg, Exception? exception)
+        {
+            if (log == null) return;
+            log.LogError(exception: exception, message: msg);
+        }
+    
+        /// <summary>
+        /// Log critical message.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="exception"></param>
+        protected void crit(string msg, Exception? exception)
+        {
+            if (log == null) return;
+            log.LogCritical(exception: exception, message: msg);
+        }
+        
     }
 }

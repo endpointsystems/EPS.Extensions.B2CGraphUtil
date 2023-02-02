@@ -5,8 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using EPS.Extensions.B2CGraphUtil.Exceptions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using Microsoft.IdentityModel.Tokens;
+using Polly;
 using User = Microsoft.Graph.User;
 // ReSharper disable PartialTypeWithSinglePart
 
@@ -22,9 +23,14 @@ namespace EPS.Extensions.B2CGraphUtil
         /// Create a new instance of the <see cref="User"/> graph repository.
         /// </summary>
         /// <param name="config">The configuration object instance.</param>
-        public UserRepo(GraphUtilConfig config): base(config)
-        {
-        }
+        public UserRepo(GraphUtilConfig config): base(config){ }
+
+        /// <summary>
+        /// Create a new instance of the <see cref="User"/> graph repository, with logging.
+        /// </summary>
+        /// <param name="config">The graph configuration.</param>
+        /// <param name="logger">The logger.</param>
+        public UserRepo(GraphUtilConfig config, ILogger<UserRepo> logger): base(config, logger){ }
 
         /// <summary>
         /// Add the provided User to the graph.
@@ -38,7 +44,12 @@ namespace EPS.Extensions.B2CGraphUtil
         {
             try
             {
-                var ret = await client.Users.Request().AddAsync(user);
+                User ret = null;
+                await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+                {
+                    warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to add user: {ex.Message}. Retrying...");
+                }).ExecuteAsync(async () => ret = await client.Users.Request().AddAsync(user));
+
                 return ret;
             }
             catch (ServiceException se)
@@ -47,6 +58,18 @@ namespace EPS.Extensions.B2CGraphUtil
                     $"A {se.StatusCode} occured adding user {user.UserPrincipalName} to the directory: {se.Error.Message} Check the inner exception for details.",
                     user, se);
             }
+        }
+
+        /// <summary>
+        /// Update the user in the directory.
+        /// </summary>
+        /// <param name="user"></param>
+        public async Task UpdateUser(User user)
+        {
+            await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+            {
+                warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to update user: {ex.Message}. Retrying...");
+            }).ExecuteAsync(async () => await client.Users[user.Id].Request().UpdateAsync(user));
         }
 
         /// <summary>
@@ -64,9 +87,8 @@ namespace EPS.Extensions.B2CGraphUtil
             }
             catch (ServiceException se)
             {
-                throw new UserException(
-                    $"A {se.StatusCode} occured checking the existence of user user {upn} to the directory: {se.Error.Message} Check the inner exception for details.",
-                    se);
+                err($"A {se.StatusCode} occured checking the existence of user user {upn} to the directory: {se.Error.Message} Check the inner exception for details.",se);
+                throw;
             }
         }
 
@@ -128,7 +150,12 @@ namespace EPS.Extensions.B2CGraphUtil
             };
             try
             {
-                var ret = await client.Users.Request().AddAsync(user);
+                var ret = await Policy.Handle<Exception>()
+                    .RetryAsync(config.RetryCount, (ex, i) =>
+                    {
+                        warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to add new user: {ex.Message}. Retrying...");
+                    })
+                    .ExecuteAsync(async () => await client.Users.Request().AddAsync(user));
                 return ret;
             }
             catch (ServiceException se)
@@ -200,7 +227,12 @@ namespace EPS.Extensions.B2CGraphUtil
         public async Task AddToGroup(string userId, string groupId)
         {
             var d = new DirectoryObject() {Id = userId};
-            await client.Groups[groupId].Members.References.Request().AddAsync(d);
+            await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+            {
+                warn(
+                    $"{ex.GetType()} on attempt {i} of {config.RetryCount} to add new user: {ex.Message}. Retrying...");
+            }).ExecuteAsync(async () => await client.Groups[groupId].Members.References.Request().AddAsync(d));
+            //await client.Groups[groupId].Members.References.Request().AddAsync(d);
         }
 
         /// <summary>
