@@ -44,13 +44,10 @@ namespace EPS.Extensions.B2CGraphUtil
         {
             try
             {
-                User ret = null;
-                await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+                return await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
                 {
                     warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to add user: {ex.Message}. Retrying...");
-                }).ExecuteAsync(async () => ret = await client.Users.Request().AddAsync(user));
-
-                return ret;
+                }).ExecuteAsync(async () => await client.Users.Request().AddAsync(user));
             }
             catch (ServiceException se)
             {
@@ -310,6 +307,7 @@ namespace EPS.Extensions.B2CGraphUtil
             var list = new List<User>();
             var pi = PageIterator<User>.CreatePageIterator(client, result, user =>
             {
+                // ReSharper disable once AccessToModifiedClosure
                 i++;
                 list.Add(user);
                 return i < pgSize;
