@@ -85,7 +85,7 @@ namespace EPS.Extensions.B2CGraphUtil.Test
         }
 
         [Test]
-        public async Task FindByemail()
+        public async Task FindByEmail()
         {
             var user = await repo.FindUserByOtherMails("<external-registered-user>@gmail.com");
             Assert.IsNotNull(user);

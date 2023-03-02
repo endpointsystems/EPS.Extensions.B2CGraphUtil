@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using EPS.Extensions.B2CGraphUtil.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using Polly;
-using User = Microsoft.Graph.User;
+using User = Microsoft.Graph.Models.User;
 // ReSharper disable PartialTypeWithSinglePart
 
 namespace EPS.Extensions.B2CGraphUtil
 {
     /// <summary>
-    /// Repository of <see cref="Microsoft.Graph.User"/> objects found in the B2C Graph.
+    /// Repository of <see cref="User"/> objects found in the B2C Graph.
     /// </summary>
     public partial class UserRepo: BaseRepo
     {
@@ -45,17 +45,17 @@ namespace EPS.Extensions.B2CGraphUtil
             try
             {
                 User ret = null;
-                await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+                await Policy.Handle<Exception>().RetryAsync(graphUtilConfig.RetryCount, (ex, i) =>
                 {
-                    warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to add user: {ex.Message}. Retrying...");
-                }).ExecuteAsync(async () => ret = await client.Users.Request().AddAsync(user));
+                    warn($"{ex.GetType()} on attempt {i} of {graphUtilConfig.RetryCount} to add user: {ex.Message}. Retrying...");
+                }).ExecuteAsync(async () => ret = await client.Users.PostAsync(user));
 
                 return ret;
             }
             catch (ServiceException se)
             {
                 throw new UserException(
-                    $"A {se.StatusCode} occured adding user {user.UserPrincipalName} to the directory: {se.Error.Message} Check the inner exception for details.",
+                    $"An exception occured adding user {user.UserPrincipalName} to the directory: {se.Message} Check the inner exception for details.",
                     user, se);
             }
         }
@@ -66,10 +66,10 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <param name="user"></param>
         public async Task UpdateUser(User user)
         {
-            await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+            await Policy.Handle<Exception>().RetryAsync(graphUtilConfig.RetryCount, (ex, i) =>
             {
-                warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to update user: {ex.Message}. Retrying...");
-            }).ExecuteAsync(async () => await client.Users[user.Id].Request().UpdateAsync(user));
+                warn($"{ex.GetType()} on attempt {i} of {graphUtilConfig.RetryCount} to update user: {ex.Message}. Retrying...");
+            }).ExecuteAsync(async () => await client.Users[user.Id].PatchAsync(user));
         }
 
         /// <summary>
@@ -81,13 +81,15 @@ namespace EPS.Extensions.B2CGraphUtil
         {
             try
             {
-                var u = await client.Users.Request()
-                    .Filter($"userPrincipalName eq '{upn}'").GetAsync();
-                return u.Count > 0;
+                var u = await client.Users.GetAsync(config =>
+                {
+                    config.QueryParameters.Select = new[] { "userPrincipalName", upn };
+                });
+                return u.Value.Count > 0;
             }
             catch (ServiceException se)
             {
-                err($"A {se.StatusCode} occured checking the existence of user user {upn} to the directory: {se.Error.Message} Check the inner exception for details.",se);
+                err($"An exception occured checking the existence of user user {upn} to the directory: {se.Message} Check the inner exception for details.",se);
                 throw;
             }
         }
@@ -105,8 +107,11 @@ namespace EPS.Extensions.B2CGraphUtil
         {
             //queries that didn't work
             // $"identities/any(id:id eq '{email}')"
-            var users = (await client.Users.Request().Filter($"otherMails/any(id:id eq '{email}')").GetAsync()).ToList();
-            return users.Count == 0 ? null : users.First();
+            var users = await client.Users.GetAsync(config =>
+            {
+                config.QueryParameters.Filter = $"otherMails/any(id:id eq '{email}')";
+            });
+            return users.Value.Count == 0 ? null : users.Value.First();
         }
 
         /// <summary>
@@ -146,22 +151,22 @@ namespace EPS.Extensions.B2CGraphUtil
                 PasswordPolicies = "DisablePasswordExpiration",
                 AccountEnabled = false,
                 MailNickname = firstName + "." + lastName,
-                UserPrincipalName = firstName + "." + lastName + "@" + domains[0].Id
+                UserPrincipalName = firstName + "." + lastName + "@" + domain.Id
             };
             try
             {
                 var ret = await Policy.Handle<Exception>()
-                    .RetryAsync(config.RetryCount, (ex, i) =>
+                    .RetryAsync(graphUtilConfig.RetryCount, (ex, i) =>
                     {
-                        warn($"{ex.GetType()} on attempt {i} of {config.RetryCount} to add new user: {ex.Message}. Retrying...");
+                        warn($"{ex.GetType()} on attempt {i} of {graphUtilConfig.RetryCount} to add new user: {ex.Message}. Retrying...");
                     })
-                    .ExecuteAsync(async () => await client.Users.Request().AddAsync(user));
+                    .ExecuteAsync(async () => await client.Users.PostAsync(user));
                 return ret;
             }
             catch (ServiceException se)
             {
                 throw new UserException(
-                    $"A {se.StatusCode} occured building and adding user {user.UserPrincipalName} to the directory: {se.Error.Message} Check the inner exception for details.",
+                    $"An exception occured building and adding user {user.UserPrincipalName} to the directory: {se.Message} Check the inner exception for details.",
                     user, se);
             }
         }
@@ -172,7 +177,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <param name="id">The user's identifier.</param>
         public async Task DeleteUser(string id)
         {
-            await client.Users[id].Request().DeleteAsync();
+            await client.Users[id].DeleteAsync();
         }
 
         /// <summary>
@@ -182,10 +187,12 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns>The <see cref="User"/> or null if they do not exist.</returns>
         public async Task<User> GetUserByUPN(string upn)
         {
-            var u = await client.Users.Request()
-                .Filter($"userPrincipalName eq '{upn}'").GetAsync();
+            var u = await client.Users.GetAsync(config =>
+            {
+                config.QueryParameters.Filter = $"userPrincipalName eq '{upn}'";
+            });
 
-            return u.Count > 0 ? u.First() : null;
+            return u.Value.Count > 0 ? u.Value.FirstOrDefault() : null;
         }
 
         /// <summary>
@@ -195,7 +202,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns>The <see cref="User"/>.</returns>
         public async Task<User> GetUser(string userId)
         {
-            return await client.Users[userId].Request().GetAsync();
+            return await client.Users[userId].GetAsync();
         }
 
         /// <summary>
@@ -209,12 +216,11 @@ namespace EPS.Extensions.B2CGraphUtil
             DirectoryObject resp;
             try
             {
-                resp = await client.Users[userId].MemberOf[groupId].Request().GetAsync();
+                resp = await client.Users[userId].MemberOf[groupId].GetAsync();
             }
-            catch (ServiceException se)
+            catch (ServiceException)
             {
-                if (se.StatusCode == HttpStatusCode.NotFound) return false;
-                throw;
+                return false;
             }
             return resp != null;
         }
@@ -227,12 +233,11 @@ namespace EPS.Extensions.B2CGraphUtil
         public async Task AddToGroup(string userId, string groupId)
         {
             var d = new DirectoryObject() {Id = userId};
-            await Policy.Handle<Exception>().RetryAsync(config.RetryCount, (ex, i) =>
+            await Policy.Handle<Exception>().RetryAsync(graphUtilConfig.RetryCount, (ex, i) =>
             {
                 warn(
-                    $"{ex.GetType()} on attempt {i} of {config.RetryCount} to add new user: {ex.Message}. Retrying...");
-            }).ExecuteAsync(async () => await client.Groups[groupId].Members.References.Request().AddAsync(d));
-            //await client.Groups[groupId].Members.References.Request().AddAsync(d);
+                    $"{ex.GetType()} on attempt {i} of {graphUtilConfig.RetryCount} to add new user: {ex.Message}. Retrying...");
+            }).ExecuteAsync(async () => await client.Groups[groupId].Members.GetAsync());
         }
 
         /// <summary>
@@ -242,17 +247,8 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns>A list of <see cref="DirectoryObject"/> values containing the <see cref="User"/></returns>
         public async Task<List<DirectoryObject>> MemberOf(string userId)
         {
-            int i = 0;
-            var resp = await client.Users[userId].MemberOf.Request().GetAsync();
-            var list = resp.CurrentPage.ToList();
-            var pi = PageIterator<DirectoryObject>.CreatePageIterator(client, resp, d =>
-            {
-                i++;
-                list.Add(d);
-                return i < resp.Count;
-            });
-            await pi.IterateAsync();
-            return list;
+            var resp = await client.Users[userId].MemberOf.GetAsync();
+            return resp.Value;
         }
 
         /// <summary>
@@ -264,32 +260,12 @@ namespace EPS.Extensions.B2CGraphUtil
         /// This code will catch an exception if the group isn't part of the Azure Active Directory
         /// Groups collection (i.e. Global administrator or anything listed in Azure AD B2C | Roles and administrators)
         /// </remarks>
-        public async Task<List<Group>> GetMemberGroupListAsync(string userId)
+        public async Task<List<DirectoryObject>> GetMemberGroupListAsync(string userId)
         {
             try
             {
-                var i = 0;
-                var names = new List<Group>();
-                var groups = await client.Users[userId].MemberOf.Request().GetAsync();
-                var iterator =
-                    PageIterator<DirectoryObject>.CreatePageIterator(client, groups,
-                        dirObj =>
-                        {
-                            i++;
-                            try
-                            {
-                                var g = client.Groups[dirObj.Id].Request().GetAsync().Result;
-                                names.Add(g);
-                            }
-                            catch (AggregateException)
-                            {
-                                //catch an exception when an AD group shows up that isn't part of the B2C Groups
-                                //(i.e. 'System Administrators')
-                            }
-                            return i < groups.Count;
-                        });
-                await iterator.IterateAsync();
-                return names;
+                var dirObjs = await client.Users[userId].MemberOf.GetAsync();
+                return dirObjs.Value;
             }
             catch (Exception e)
             {
@@ -304,24 +280,8 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns></returns>
         public async Task<List<User>> GetAllUsers()
         {
-            int i = 0;
-            int pgSize = 100;
-            var result = await client.Users.Request().GetAsync();
-            var list = new List<User>();
-            var pi = PageIterator<User>.CreatePageIterator(client, result, user =>
-            {
-                i++;
-                list.Add(user);
-                return i < pgSize;
-            });
-
-            await pi.IterateAsync();
-            while (pi.State != PagingState.Complete)
-            {
-                i = 0;
-                await pi.ResumeAsync();
-            }
-            return list;
+            var result = await client.Users.GetAsync();
+            return result.Value;
         }
     }
 }

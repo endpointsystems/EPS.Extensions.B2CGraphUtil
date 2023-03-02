@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EPS.Extensions.B2CGraphUtil.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace EPS.Extensions.B2CGraphUtil
 {
@@ -32,18 +33,13 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns>The list of group objects.</returns>
         public async Task<List<Group>> GetAllGroups()
         {
-            int i = 0;
-            var resp = await client.Groups.Request().GetAsync();
+            var resp = await client.Groups.GetAsync();
             var list = new List<Group>();
 
-            var pi = PageIterator<Group>.CreatePageIterator(client, resp, g =>
+            foreach (var group in resp.Value)
             {
-                i++;
-                list.Add(g);
-                return i < resp.Count;
-            });
-
-            await pi.IterateAsync();
+                list.Add(group);
+            }
             return list;
 
         }
@@ -55,7 +51,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <returns>A <see cref="Task"/> containing the <see cref="Group"/>.</returns>
         public Task<Group> GetGroup(string groupId)
         {
-            return client.Groups[groupId].Request().GetAsync();
+            return client.Groups[groupId].GetAsync();
         }
 
         /// <summary>
@@ -64,7 +60,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <param name="groupId">The group identifier.</param>
         public async Task DeleteGroup(string groupId)
         {
-            await client.Groups[groupId].Request().DeleteAsync();
+            await client.Groups[groupId].DeleteAsync();
         }
 
         /// <summary>
@@ -81,7 +77,7 @@ namespace EPS.Extensions.B2CGraphUtil
                 MailNickname = groupName,
                 SecurityEnabled = true
             };
-            var resp = await client.Groups.Request().AddAsync(group);
+            var resp = await client.Groups.PostAsync(group);
             return resp;
         }
         
@@ -101,7 +97,7 @@ namespace EPS.Extensions.B2CGraphUtil
                 MailNickname = groupName,
                 SecurityEnabled = true
             };
-            var resp = await client.Groups.Request().AddAsync(group);
+            var resp = await client.Groups.PostAsync(group);
             return resp;
         }
 

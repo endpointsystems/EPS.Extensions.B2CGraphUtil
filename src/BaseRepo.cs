@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Microsoft.Graph;
 using Azure.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Models;
 using Microsoft.Identity.Client;
 using GraphUtilConfig = EPS.Extensions.B2CGraphUtil.Config.GraphUtilConfig;
 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
@@ -16,7 +18,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <summary>
         /// The graph configuration.
         /// </summary>
-        protected readonly GraphUtilConfig config;
+        protected readonly GraphUtilConfig graphUtilConfig;
         /// <summary>
         /// The logger (optional)
         /// </summary>
@@ -27,20 +29,21 @@ namespace EPS.Extensions.B2CGraphUtil
         protected GraphServiceClient client;
 
         /// <summary>
+        /// The first domain picked up by the graph.
+        /// </summary>
+        protected Domain domain;
+
+        /// <summary>
         /// The client credential provider.
         /// </summary>
         private ClientSecretCredential credential;
-        /// <summary>
-        /// The domains provided by the graph API.
-        /// </summary>
-        protected IGraphServiceDomainsCollectionPage domains;
         /// <summary>
         /// Instantiate a new instance of the base repo.
         /// </summary>
         /// <param name="graphUtilConfig">The configuration object.</param>
         protected BaseRepo(GraphUtilConfig graphUtilConfig)
         {
-            config = graphUtilConfig;
+            this.graphUtilConfig = graphUtilConfig;
             initGraph();
         }
 
@@ -51,24 +54,26 @@ namespace EPS.Extensions.B2CGraphUtil
         /// <param name="logger"></param>
         protected BaseRepo(GraphUtilConfig graphUtilConfig, ILogger logger)
         {
-            config = graphUtilConfig;
+            this.graphUtilConfig = graphUtilConfig;
             log = logger;
             initGraph();
         }
 
         private void initGraph()
         {
+            /*
             var app = ConfidentialClientApplicationBuilder
-                .Create(config.AppId)
-                .WithTenantId(config.TenantId)
-                .WithClientSecret(config.Secret)
+                .Create(graphUtilConfig.AppId)
+                .WithTenantId(graphUtilConfig.TenantId)
+                .WithClientSecret(graphUtilConfig.Secret)
                 .Build();
-
-            credential = new ClientSecretCredential(config.TenantId,
-                config.AppId,
-                config.Secret);
+            */
+            credential = new ClientSecretCredential(graphUtilConfig.TenantId,
+                graphUtilConfig.AppId,
+                graphUtilConfig.Secret);
             client = new GraphServiceClient(credential);
-            domains = client.Domains.Request().GetAsync().Result;
+            var domains = client.Domains.GetAsync().Result;
+            if (domains != null) domain = domains.Value.FirstOrDefault();
         }
         
         /// <summary>
