@@ -252,7 +252,7 @@ namespace EPS.Extensions.B2CGraphUtil
         }
 
         /// <summary>
-        /// Get the list of group names that the user is a group of.
+        /// Get the list of groups that the user is a member of.
         /// </summary>
         /// <param name="userId">The user to test against.</param>
         /// <returns>A list of groups.</returns>
@@ -260,18 +260,33 @@ namespace EPS.Extensions.B2CGraphUtil
         /// This code will catch an exception if the group isn't part of the Azure Active Directory
         /// Groups collection (i.e. Global administrator or anything listed in Azure AD B2C | Roles and administrators)
         /// </remarks>
-        public async Task<List<DirectoryObject>> GetMemberGroupListAsync(string userId)
+        public async Task<List<Group>> GetMemberGroupListAsync(string userId)
         {
             try
             {
-                var dirObjs = await client.Users[userId].MemberOf.GetAsync();
-                return dirObjs.Value;
+                var objs = await client.Users[userId].MemberOf.GraphGroup.GetAsync();
+                return objs.Value;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Get the list of directory objects that the user is a member of.
+        /// </summary>
+        /// <param name="userId">The user to test against.</param>
+        /// <returns>A list of <see cref="DirectoryObject"/>.</returns>
+        /// <remarks>
+        /// This code will catch an exception if the group isn't part of the Azure Active Directory
+        /// Groups collection (i.e. Global administrator or anything listed in Azure AD B2C | Roles and administrators)
+        /// </remarks>
+        public async Task<List<DirectoryObject>> GetMemberDirectoryObjectsAsync(string userId)
+        {
+            var dirObjs = await client.Users[userId].MemberOf.GetAsync();
+            return dirObjs.Value;
         }
 
         /// <summary>

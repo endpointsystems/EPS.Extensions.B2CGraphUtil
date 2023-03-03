@@ -12,7 +12,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <PackageId>EPS.Extensions.B2CGraphUtil</PackageId>
         <AssemblyName>EPS.Extensions.B2CGraphUtil</AssemblyName>
-        <PackageVersion>7.0.0</PackageVersion>
+        <PackageVersion>7.0.1</PackageVersion>
         <Authors>endpointsystems</Authors>
         <RepositoryUrl>https://github.com/endpointsystems/EPS.Extensions.B2CGraphUtil</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
