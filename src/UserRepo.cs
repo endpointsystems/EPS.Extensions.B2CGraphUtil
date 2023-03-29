@@ -237,7 +237,14 @@ namespace EPS.Extensions.B2CGraphUtil
             {
                 warn(
                     $"{ex.GetType()} on attempt {i} of {graphUtilConfig.RetryCount} to add new user: {ex.Message}. Retrying...");
-            }).ExecuteAsync(async () => await client.Groups[groupId].Members.GetAsync());
+            }).ExecuteAsync(async () => {
+                var usr = new ReferenceCreate
+                {
+                    OdataId = $"https://graph.microsoft.com/v1.0/directoryObjects/{userId}",
+                };
+                await client.Groups[groupId].Members.Ref.PostAsync(usr);
+
+            });
         }
 
         /// <summary>

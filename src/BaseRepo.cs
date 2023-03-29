@@ -4,7 +4,6 @@ using Microsoft.Graph;
 using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph.Models;
-using Microsoft.Identity.Client;
 using GraphUtilConfig = EPS.Extensions.B2CGraphUtil.Config.GraphUtilConfig;
 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
@@ -81,7 +80,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void info(string msg, Exception? exception = null)
+        protected void info(string msg, Exception exception = null)
         {
             if (log == null) return;
             log.LogInformation(exception: exception, message:msg);
@@ -92,7 +91,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void warn(string msg, Exception? exception = null)
+        protected void warn(string msg, Exception exception = null)
         {
             if (log == null) return;
             log.LogWarning(exception: exception, message: msg);
@@ -102,7 +101,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void trace(string msg, Exception? exception = null)
+        protected void trace(string msg, Exception exception = null)
         {
             if (log == null) return;
             log.LogTrace(exception: exception, message: msg);
@@ -113,7 +112,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void debug(string msg, Exception? exception)
+        protected void debug(string msg, Exception exception = null)
         {
             if (log == null) return;
             log.LogDebug(exception: exception, message: msg);
@@ -124,7 +123,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void err(string msg, Exception? exception)
+        protected void err(string msg, Exception exception = null)
         {
             if (log == null) return;
             log.LogError(exception: exception, message: msg);
@@ -135,7 +134,7 @@ namespace EPS.Extensions.B2CGraphUtil
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="exception"></param>
-        protected void crit(string msg, Exception? exception)
+        protected void crit(string msg, Exception exception)
         {
             if (log == null) return;
             log.LogCritical(exception: exception, message: msg);
